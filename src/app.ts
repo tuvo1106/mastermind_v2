@@ -4,6 +4,7 @@ import { json } from 'body-parser'
 import morgan from 'morgan'
 
 import { healthCheckController } from './domain/health-check/health-check-controller'
+import { userController } from './domain/user/user-controller'
 
 import { logger } from './infra/logger/winston-config-stream'
 import { errorHandler } from './application/middlewares/error-handler'
@@ -20,6 +21,7 @@ app.use(morgan('combined', { stream: logger.stream }))
 
 // Routers
 app.use(healthCheckController)
+app.use(userController)
 
 // Favicon
 app.get('/favicon.ico', (req, res) => res.status(204))
