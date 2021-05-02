@@ -1,19 +1,20 @@
-import { GameEntity } from './../../domain/game/game-entity'
 import { Repository } from './respository.interface'
-import { logger } from '../../infra/logger/winston-config-stream'
+import { GameStatus } from './../../application/enums/gameStatus'
 import { UserFactory } from '../../application/factories/user-factory'
 import { NotFoundError } from '../../application/errors/not-found-error'
 import { BadRequestError } from './../../application/errors/bad-request-error'
-import { UserEntity } from '../../domain/user/user-entity'
 import { GameFactory } from '../../application/factories/game-factory'
+import { UserEntity } from '../../domain/user/user-entity'
+import { GameEntity, Score } from './../../domain/game/game-entity'
+import { logger } from '../../infra/logger/winston-config-stream'
 
-interface inMemoryDB {
+interface inMemoryDatabase {
   users: UserEntity[]
   games: GameEntity[]
 }
 
 class InMemoryRepository extends Repository {
-  private db: inMemoryDB = {
+  private db: inMemoryDatabase = {
     users: [],
     games: [],
   }
@@ -96,6 +97,30 @@ class InMemoryRepository extends Repository {
     this.db.games.splice(gameIndex, 1)
   }
 
+  async updateGame(
+    userId: string,
+    gameId: string,
+    params: { history: Score[]; guessesRemaining: number; state: GameStatus }
+  ) {
+    const gameIndex = this.findGameIndexById(gameId)
+    if (gameIndex === -1) {
+      throw new NotFoundError()
+    }
+    const game = this.db.games[gameIndex]
+    if (game.userId !== userId) {
+      throw new NotFoundError()
+    }
+    const updatedGame = {
+      ...game,
+      history: params.history,
+      guessesRemaining: params.guessesRemaining,
+      state: params.state,
+    }
+    this.db.games.splice(gameIndex, 1, updatedGame)
+    logger.info(`Game updated: ${JSON.stringify(updatedGame)}`)
+    return updatedGame
+  }
+
   flush() {
     this.db = {
       users: [],
@@ -114,7 +139,7 @@ class InMemoryRepository extends Repository {
   private findUserIndexById(userId: string): number {
     return this.db.users.map((user) => user.id).indexOf(userId)
   }
-  
+
   private findGameByIds(
     userId: string,
     gameId: string

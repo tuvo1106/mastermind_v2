@@ -1,4 +1,5 @@
-import { GameEntity } from '../../domain/game/game-entity'
+import { GameStatus } from './../../application/enums/gameStatus'
+import { GameEntity, Score } from '../../domain/game/game-entity'
 import { UserEntity } from '../../domain/user/user-entity'
 
 export abstract class Repository {
@@ -22,4 +23,14 @@ export abstract class Repository {
   abstract getGame(userId: string, gameId: string): Promise<GameEntity>
 
   abstract deleteGame(userId: string, gameId: string): void
+
+  abstract updateGame(
+    userId: string,
+    gameId: string,
+    params: {
+      history: Score[]
+      guessesRemaining: number
+      state: GameStatus
+    }
+  ): Promise<GameEntity>
 }
