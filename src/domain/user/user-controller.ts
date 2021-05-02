@@ -6,7 +6,7 @@ import { userService } from './user-service'
 import { validateRequest } from './../../application/middlewares/validate-request'
 
 const router = express.Router()
-const basePath = '/api/v1/users/'
+const basePath = '/api/v1/users'
 
 router.post(
   basePath,
@@ -19,20 +19,20 @@ router.post(
   }
 )
 
-router.get(basePath + ':userId/', async (req, res) => {
+router.get(basePath + '/:userId', async (req, res) => {
   const { userId } = req.params
   const user = await userService.getUser(userId)
   res.status(200).send(user)
 })
 
-router.delete(basePath + ':userId/', async (req, res) => {
+router.delete(basePath + '/:userId', async (req, res) => {
   const { userId } = req.params
   await userService.deleteUser(userId)
-  res.send(204)
+  res.sendStatus(204)
 })
 
 router.put(
-  basePath + ':userId/',
+  basePath + '/:userId',
   body('name').not().isEmpty().withMessage('Name cannot be empty.'),
   validateRequest,
   async (req, res) => {

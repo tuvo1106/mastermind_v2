@@ -5,11 +5,15 @@ import morgan from 'morgan'
 
 import { healthCheckController } from './domain/health-check/health-check-controller'
 import { userController } from './domain/user/user-controller'
+import { gameController } from './domain/game/game-controller'
 
 import { logger } from './infra/logger/winston-config-stream'
 import { errorHandler } from './application/middlewares/error-handler'
 
 import { NotFoundError } from './application/errors/not-found-error'
+
+import dotenv from 'dotenv'
+dotenv.config()
 
 const app = express()
 
@@ -22,6 +26,7 @@ app.use(morgan('combined', { stream: logger.stream }))
 // Routers
 app.use(healthCheckController)
 app.use(userController)
+app.use(gameController)
 
 // Favicon
 app.get('/favicon.ico', (req, res) => res.status(204))

@@ -1,5 +1,5 @@
 import { AppHealth } from './app-health.interface'
-import { Status } from '../../application/enums/status'
+import { AppStatus } from '../../application/enums/appStatus'
 
 class HealthCheckService {
   constructor() {}
@@ -7,7 +7,7 @@ class HealthCheckService {
   getAppHealth(): AppHealth {
     return {
       uptime: process.uptime(),
-      status: Status.OK,
+      status: AppStatus.OK,
       timestamp: Date.now(),
     }
   }
