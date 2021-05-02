@@ -114,7 +114,7 @@ class InMemoryRepository extends Repository {
   private findUserIndexById(userId: string): number {
     return this.db.users.map((user) => user.id).indexOf(userId)
   }
-
+  
   private findGameByIds(
     userId: string,
     gameId: string

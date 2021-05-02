@@ -25,6 +25,7 @@ describe('user', () => {
   })
 
   it('returns a 400 if the user already exists', async () => {
+
     await createUser('Tu')
 
     await request(app)

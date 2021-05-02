@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { validationResult } from 'express-validator'
 import { logger } from '../../infra/logger/winston-config-stream'
+
 import { RequestValidationError } from '../errors/request-validation-error'
 
 export const validateRequest = (

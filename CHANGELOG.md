@@ -54,3 +54,4 @@ All notable changes to this project will be documented in this file.
 - Utility function (createDirIfNotExists)
 - CHANGELOG and NOTES
 - CircleCI pipeline
+
