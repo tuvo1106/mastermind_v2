@@ -8,7 +8,7 @@ class GameFactory {
 
   totalGuesses: number
   board: number[]
-  history: Score[][]
+  history: Score[]
   userId: string
 
   constructor() {

@@ -21,6 +21,13 @@ const createGame = (userId: string, params: any) => {
     .expect(201)
 }
 
+const createIncorrectGuess = (board: number[]) => {
+  return board.map((num) => {
+    if (num === 9) return 0
+    return num + 1
+  })
+}
+
 describe('game', () => {
   let userId: string
 
@@ -149,5 +156,104 @@ describe('game', () => {
     await request(app)
       .delete(`/api/v1/users/${userId}/games/${gameId}`)
       .expect(404)
+  })
+
+  it('returns correct info about a game after a winning guess is submitted', async () => {
+    let res = await createGame(userId, { difficulty: 'test' })
+    const { id, board, totalGuesses } = res.body
+
+    res = await request(app)
+      .post(`/api/v1/users/${userId}/games/${id}/guess`)
+      .send({
+        guess: board,
+      })
+      .expect(200)
+
+    expect(res.body.guessesRemaining).toEqual(totalGuesses - 1)
+    expect(res.body.history.length).toBeGreaterThan(0)
+    expect(res.body.state).toEqual(GameStatus.WIN)
+
+    // game is already over
+    res = await request(app)
+      .post(`/api/v1/users/${userId}/games/${id}/guess`)
+      .send({
+        guess: board,
+      })
+      .expect(400)
+  })
+
+  it('returns correct info about a game after the user uses all their available guesses', async () => {
+    let res = await createGame(userId, { difficulty: 'test' })
+    const { id, board, totalGuesses } = res.body
+    const incorrectGuess = createIncorrectGuess(board)
+
+    for (let i = 0; i < totalGuesses; i++) {
+      res = await request(app)
+        .post(`/api/v1/users/${userId}/games/${id}/guess`)
+        .send({
+          guess: incorrectGuess,
+        })
+        .expect(200)
+    }
+
+    expect(res.body.guessesRemaining).toEqual(0)
+    expect(res.body.history.length).toEqual(3)
+    expect(res.body.state).toEqual(GameStatus.LOSE)
+
+    // game is already over
+    res = await request(app)
+      .post(`/api/v1/users/${userId}/games/${id}/guess`)
+      .send({
+        guess: incorrectGuess,
+      })
+      .expect(400)
+  })
+
+  it('returns a 400 if the guess length is invalid', async () => {
+    const res = await createGame(userId, {})
+    const { id } = res.body
+
+    await request(app)
+      .post(`/api/v1/users/${userId}/games/${id}/guess`)
+      .send({
+        guess: [1, 2, 3],
+      })
+      .expect(400)
+  })
+
+  it('returns a 400 if the guess is empty', async () => {
+    const res = await createGame(userId, {})
+    const { id } = res.body
+
+    await request(app)
+      .post(`/api/v1/users/${userId}/games/${id}/guess`)
+      .send({
+        guess: [],
+      })
+      .expect(400)
+  })
+
+  it('returns a 400 if the guess has non-numeric values', async () => {
+    const res = await createGame(userId, {})
+    const { id } = res.body
+
+    await request(app)
+      .post(`/api/v1/users/${userId}/games/${id}/guess`)
+      .send({
+        guess: ['1', '2', '3', '4'],
+      })
+      .expect(400)
+  })
+
+  it('returns a 400 if the guess has non-integer values', async () => {
+    const res = await createGame(userId, {})
+    const { id } = res.body
+
+    await request(app)
+      .post(`/api/v1/users/${userId}/games/${id}/guess`)
+      .send({
+        guess: [1.5, 2, 3, 4],
+      })
+      .expect(400)
   })
 })

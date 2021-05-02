@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { logger } from '../../infra/logger/winston-config-stream'
 
-export class NumberGeneratorService {
+class NumberGeneratorService {
   private readonly DEFAULT_TOTAL_NUM = 4
   private readonly DEFAULT_MIN = 0
   private readonly DEFAULT_MAX = 9
@@ -60,3 +60,7 @@ export class NumberGeneratorService {
     return array.map((char) => +char)
   }
 }
+
+const numberGeneratorService = new NumberGeneratorService()
+
+export { numberGeneratorService }

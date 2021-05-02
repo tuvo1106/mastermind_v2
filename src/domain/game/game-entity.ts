@@ -12,6 +12,6 @@ export interface GameEntity {
   totalGuesses: number
   guessesRemaining: number
   board: number[]
-  history: Score[][]
+  history: Score[]
   userId: string
 }

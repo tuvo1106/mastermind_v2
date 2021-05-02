@@ -4,9 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-#### [0.0.3] - 2021-05-02
+### [0.1.0] - 2021-05-02
 
-### Added
+#### Added
+
+- GameParamsValidatorService
+- Script to seed database in 'development` env
+
+#### Changed
+
+- Update logic in GameController/GameService to process guesses
+- Change NumberGeneratorService to be a singleton class
+
+### [0.0.3] - 2021-05-02
+
+#### Added
 
 - Environmental variables
 - Game controller/service and tests
@@ -15,15 +27,15 @@ All notable changes to this project will be documented in this file.
 - GameEntity
 - NumberGeneratorService
 
-### Changed
+#### Changed
 
 - Rename status enum
 - Change validateRequest behavior to log out errors
 - Update Repository abstract class and its implementations
 
-#### [0.0.2] - 2021-04-30
+### [0.0.2] - 2021-04-30
 
-### Added
+#### Added
 
 - User controller/service and tests
 - Abstract Repository
@@ -35,14 +47,14 @@ All notable changes to this project will be documented in this file.
 - UserEntity
 - Validation middleware (express-validator)
 
-### Changed
+#### Changed
 
 - Renamed various interface files
 - Script names
 
-#### [0.0.1] - 2021-04-29
+### [0.0.1] - 2021-04-29
 
-### Added
+#### Added
 
 - Express app
 - Logging middleware (Winston, Morgan)
@@ -54,4 +66,3 @@ All notable changes to this project will be documented in this file.
 - Utility function (createDirIfNotExists)
 - CHANGELOG and NOTES
 - CircleCI pipeline
-
