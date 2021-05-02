@@ -1,7 +1,7 @@
-import { Status } from '../../application/enums/status'
+import { AppStatus } from '../../application/enums/appStatus'
 
 export interface AppHealth {
   uptime: number
-  status: Status
+  status: AppStatus
   timestamp: number
 }

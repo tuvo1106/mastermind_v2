@@ -4,11 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+#### [0.0.3] - 2021-05-02
+
+### Added
+
+- Environmental variables
+- Game controller/service and tests
+- GameStatus enum
+- GameFactory
+- GameEntity
+- NumberGeneratorService
+
+### Changed
+
+- Rename status enum
+- Change validateRequest behavior to log out errors
+- Update Repository abstract class and its implementations
+
 #### [0.0.2] - 2021-04-30
 
 ### Added
 
-- User controller/service/repository and tests
+- User controller/service and tests
 - Abstract Repository
 - InMemoryRepository implementation
 - BadRequestError and RequestValidationError
@@ -36,4 +53,4 @@ All notable changes to this project will be documented in this file.
 - Error handling middleware
 - Utility function (createDirIfNotExists)
 - CHANGELOG and NOTES
-- Add circleci pipeline
+- CircleCI pipeline

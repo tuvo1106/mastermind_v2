@@ -18,13 +18,13 @@ describe('user', () => {
     inMemoryRepository.flush()
   })
 
-  it('returns a 201 if a new user is able to created', async () => {
+  it('returns a 201 if a new user is able to be created', async () => {
     const res = await createUser('Tu')
 
     expect(res.body.name).toEqual('Tu')
   })
 
-  it('returns a 400 if the user already existt', async () => {
+  it('returns a 400 if the user already exists', async () => {
     await createUser('Tu')
 
     await request(app)
@@ -45,12 +45,12 @@ describe('user', () => {
 
   it('returns a user if that user exists', async () => {
     const name = 'Tu'
-    const res = await createUser('Tu')
+    let res = await createUser('Tu')
     const userId = res.body.id
 
-    const user = await request(app).get(`/api/v1/users/${userId}`).expect(200)
+    res = await request(app).get(`/api/v1/users/${userId}`).expect(200)
 
-    expect(user.body.name).toBe(name)
+    expect(res.body.name).toBe(name)
   })
 
   it('returns a 404 if the user does not exist on GET', async () => {
