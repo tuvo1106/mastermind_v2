@@ -20,31 +20,35 @@ describe('gameService', () => {
     let board = [1, 2, 3, 4]
     let res = gameService.getCorrectPositionsAndColors(guess, board)
 
-    expect(res).toEqual({ correctColors: 0, correctPositions: 4 })
+    expect(res).toEqual({
+      correctColors: 0,
+      correctPositions: 4,
+      guess,
+    })
 
     guess = [1, 2, 3, 4]
     board = [5, 6, 7, 8]
     res = gameService.getCorrectPositionsAndColors(guess, board)
 
-    expect(res).toEqual({ correctColors: 0, correctPositions: 0 })
+    expect(res).toEqual({ correctColors: 0, correctPositions: 0, guess })
 
     guess = [1, 2, 3, 4]
     board = [4, 5, 6, 7]
     res = gameService.getCorrectPositionsAndColors(guess, board)
 
-    expect(res).toEqual({ correctColors: 1, correctPositions: 0 })
+    expect(res).toEqual({ correctColors: 1, correctPositions: 0, guess })
 
     guess = [2, 2, 2, 2]
     board = [5, 2, 2, 5]
     res = gameService.getCorrectPositionsAndColors(guess, board)
 
-    expect(res).toEqual({ correctColors: 0, correctPositions: 2 })
+    expect(res).toEqual({ correctColors: 0, correctPositions: 2, guess })
 
     guess = [1, 2, 3, 4]
     board = [4, 3, 2, 1]
     res = gameService.getCorrectPositionsAndColors(guess, board)
 
-    expect(res).toEqual({ correctColors: 4, correctPositions: 0 })
+    expect(res).toEqual({ correctColors: 4, correctPositions: 0, guess })
   })
 
   it('returns the correct amount of colors guessed', () => {
@@ -77,6 +81,7 @@ describe('gameService', () => {
     let score: Score = {
       correctPositions: 4,
       correctColors: 0,
+      guess: [1, 2, 3, 4],
     }
     let board = [1, 2, 3, 4]
     let guessesRemaining = 1
@@ -88,6 +93,7 @@ describe('gameService', () => {
     score = {
       correctPositions: 3,
       correctColors: 0,
+      guess: [1, 2, 3, 4],
     }
     board = [1, 2, 3, 4]
     guessesRemaining = 1

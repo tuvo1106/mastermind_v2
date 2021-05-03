@@ -95,6 +95,7 @@ class GameService {
     return {
       correctColors,
       correctPositions,
+      guess,
     }
   }
 }

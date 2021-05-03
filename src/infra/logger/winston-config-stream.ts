@@ -1,9 +1,35 @@
+import chalk from 'chalk'
 import appRoot from 'app-root-path'
 import path from 'path'
-import winston from 'winston'
+import winston, { format } from 'winston'
 import 'winston-daily-rotate-file'
 
 import { createDirIfNotExists } from '../../application/utils/createDirIfNotExists'
+
+const { combine, timestamp, label, printf } = format
+
+const consoleFormat = printf(({ level, message, label, timestamp }) => {
+  const levelUpper = level.toUpperCase()
+  switch (levelUpper) {
+    case 'INFO':
+      message = chalk.green(message)
+      level = chalk.black.bgGreenBright.bold(level)
+      break
+    case 'WARN':
+      message = chalk.yellow(message)
+      level = chalk.black.bgYellowBright.bold(level)
+      break
+    case 'ERROR':
+      message = chalk.red(message)
+      level = chalk.black.bgRedBright.bold(level)
+      break
+    default:
+      break
+  }
+  return `[${chalk.black.magentaBright.bold(
+    label
+  )}] [${chalk.black.bgWhiteBright(timestamp)}] [${level}]: ${message}`
+})
 
 const FIVE_MB = 5242880
 const logDirectory = path.resolve(`${appRoot}`, 'logs')
@@ -30,7 +56,12 @@ const options = {
   console: {
     level: 'info',
     handleExceptions: true,
-    format: winston.format.simple(),
+    format: combine(
+      label({ label: 'mastermind_v2' }),
+      timestamp(),
+      format.splat(),
+      consoleFormat
+    ),
   },
 }
 

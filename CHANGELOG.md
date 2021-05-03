@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [0.2.0] - 2021-05-03
+
+#### Added
+
+- CLI game
+- Game, Server, Console, Inquirer classes
+
+#### Changed
+
+- Change Score object to also contain previous guesses
+- Update winston to utilize chalk colors
+
 ### [0.1.0] - 2021-05-02
 
 #### Added

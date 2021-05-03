@@ -2,6 +2,8 @@
 
 ## Todo
 
+- Fix bug if user already exists on name entry
+
 ## Tech Debt
 
 - fix `@ts-ignore` lines

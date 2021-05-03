@@ -100,7 +100,11 @@ class InMemoryRepository extends Repository {
   async updateGame(
     userId: string,
     gameId: string,
-    params: { history: Score[]; guessesRemaining: number; state: GameStatus }
+    params: {
+      history: Score[]
+      guessesRemaining: number
+      state: GameStatus
+    }
   ) {
     const gameIndex = this.findGameIndexById(gameId)
     if (gameIndex === -1) {
