@@ -1,6 +1,7 @@
 import { GameStatus } from '../../application/enums/gameStatus'
 
 export interface Score {
+  guess: number[]
   correctColors: number
   correctPositions: number
 }

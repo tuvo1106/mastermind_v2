@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid'
-import { GameStatus } from '../enums/gameStatus'
 
+import { GameStatus } from '../enums/gameStatus'
 import { GameEntity, Score } from './../../domain/game/game-entity'
 
 class GameFactory {
