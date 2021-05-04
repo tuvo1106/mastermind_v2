@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [0.3.2] - 2021-05-03
+
+#### Added
+
+- Swagger API documentation
+
+#### Changed
+
+- Update README.md
+
 ### [0.3.1] - 2021-05-03
 
 #### Added

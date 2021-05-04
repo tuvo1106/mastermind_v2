@@ -17,6 +17,7 @@ This repository contains a Mastermind API written in Express and Typescript. Use
   - [Installation](#installation)
 - [How to Play](#how-to-play)
 - [Development](#development)
+  - [API Docs](#api-docs)
   - [Continuous Integration](#continuous-integration)
   - [Unit Testing](#unit-testing)
 - [Authors](#authors)
@@ -100,6 +101,12 @@ guesses [1, 3, 6, 9], the feedback that is given will be:
 
 ## Development
 
+### API Docs
+
+API docs can be found at `http://localhost:3000/api-docs` when the API is running.
+
+![swagger](/src/assets/swagger.png)
+
 ### Testing
 
 To run tests, use:
@@ -161,7 +168,7 @@ Ran all test suites.
 
 This repository uses a CircleUI workflow that runs all tests on every commit. Contributors can see the results of the test before their merge their PR.
 
-[circle_ci_pic]()
+![circle_ci_pic](/src/assets/circle_ci.png)
 
 ## Authors
 
@@ -169,3 +176,4 @@ Created by:
 
 - [Tu Vo](https://github.com/tuvo1106)
 - Email: tuvo1106@gmail.com
+  onst o
