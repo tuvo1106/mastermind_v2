@@ -4,7 +4,7 @@ import { inMemoryRepository } from '../../infra/repository/in-memory-repository'
 
 export const seedDatabase = async () => {
   logger.info('Seeding database...')
-  const user = await inMemoryRepository.createUser('Tu', 'guest')
+  const user = await inMemoryRepository.createUser('Tu', 'mustard', 'guest')
   const board = await numberGeneratorService.getRandomNumbers()
   await inMemoryRepository.createGame(user.id, board, 3)
 }
