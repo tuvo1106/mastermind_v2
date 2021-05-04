@@ -279,4 +279,29 @@ describe('game', () => {
 
     expect(res.body.errors[0].message).toEqual('Each guess must be an integer.')
   })
+
+  it('returns a 404 if a user is not found on POST', async () => {
+    let res = await createGame(userId, {})
+    const { id } = res.body
+
+    res = await request(app)
+      .post(`/api/v1/users/random-id/games/${id}/guess`)
+      .send({
+        guess: [1, 2, 3, 4],
+      })
+      .expect(404)
+
+    expect(res.body.errors[0].message).toEqual('Route not found.')
+  })
+
+  it('returns a 404 if a game is not found on POST', async () => {
+    const res = await request(app)
+      .post(`/api/v1/users/${userId}/games/random-game/guess`)
+      .send({
+        guess: [1, 2, 3, 4],
+      })
+      .expect(404)
+
+    expect(res.body.errors[0].message).toEqual('Route not found.')
+  })
 })

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [0.3.1] - 2021-05-03
+
+#### Added
+
+- NumberGeneratorService tests
+- More tests for better test coverage
+
+#### Changed
+
+- Update README.md
+- Change max number in game board to 7
+
 ### [0.3.0] - 2021-05-03
 
 #### Added

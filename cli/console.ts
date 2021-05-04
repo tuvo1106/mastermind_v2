@@ -57,7 +57,7 @@ O = Correct number, incorrect location
 
   displayGuessPrompt(guessesRemaining: number) {
     console.log(`\n${guessesRemaining} turns left.`)
-    console.log('Please enter a number between 0 and 9.\n')
+    console.log('Please enter a number between 0 and 7.\n')
   }
 
   displayVictory() {
