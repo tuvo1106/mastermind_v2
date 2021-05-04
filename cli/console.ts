@@ -73,6 +73,18 @@ O = Correct number, incorrect location
     console.log(`Good luck, ${name}. Have fun!`)
   }
 
+  displayLoginSuccess() {
+    console.log('\nSign in successful.')
+  }
+
+  displayLoginFailure() {
+    console.log('The name and password do not match. Please try again.')
+  }
+
+  displayUserExists() {
+    console.log('User already exists. Please try again.')
+  }
+
   private buildScores(history: Score[]): string {
     let res = ''
     history.forEach((score, index) => {

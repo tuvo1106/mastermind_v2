@@ -3,15 +3,21 @@ import { GameEntity, Score } from '../../domain/game/game-entity'
 import { UserEntity } from '../../domain/user/user-entity'
 
 export abstract class Repository {
-  abstract createUser(name: string): Promise<UserEntity>
+  abstract createUser(
+    name: string,
+    password: string,
+    userId?: string
+  ): Promise<UserEntity>
 
   abstract getUser(userId: string): Promise<UserEntity>
+
+  abstract getUserByName(name: string): Promise<UserEntity>
 
   abstract deleteUser(userId: string): void
 
   abstract updateUser(
     userId: string,
-    params: { name: string }
+    params: { name?: string | undefined; password?: string | undefined }
   ): Promise<UserEntity>
 
   abstract createGame(

@@ -1,6 +1,6 @@
-import { GameStatus } from './../../../application/enums/gameStatus'
-import { Score } from './../game-entity'
-import { BadRequestError } from './../../../application/errors/bad-request-error'
+import { GameStatus } from '../../../application/enums/gameStatus'
+import { Score } from '../game-entity'
+import { BadRequestError } from '../../../application/errors/bad-request-error'
 import { gameService } from '../game-service'
 
 describe('gameService', () => {

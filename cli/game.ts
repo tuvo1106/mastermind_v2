@@ -25,30 +25,65 @@ export class Game {
 
   async startNewGame() {
     this.console.displayTitle()
-    await this.processPlayerOptions()
+    await this.processSignInOptions()
     await this.setBoard()
     while (true) {
       await this.startGameLoop()
       const { endgame } = await this.inquirer.getEndgameOptions()
       const continueGame = this.processEndgameOptions(endgame)
       if (continueGame) {
-        this.setBoard()
+        await this.setBoard()
         continue
       }
     }
   }
 
-  async processPlayerOptions() {
-    const playerOptions = await this.inquirer.getPlayerOptions()
-    const { name, difficulty } = playerOptions
-    if (name) {
-      this.name = name
+  async processSignInOptions() {
+    const { signIn } = await this.inquirer.getSignInOptions()
+    const command = this.parseInput(signIn)
+    if (command === 'new') {
+      await this.processNewPlayer()
+    } else if (command === 'sign') {
+      await this.signInExistingPlayer()
     }
-    this.difficulty = difficulty.split(' ')[0].toLowerCase()
+  }
+
+  async processNewPlayer() {
+    while (true) {
+      const { name } = await this.inquirer.getPlayerName()
+      const { password } = await this.inquirer.getPlayerPassword()
+      const user = await this.server.createUser(name, password)
+      if (user === null) {
+        this.console.displayUserExists()
+        continue
+      }
+      this.name = user.name
+      this.userId = user.id
+      const { difficulty } = await this.inquirer.getDifficulty()
+      this.difficulty = this.parseInput(difficulty)
+      return
+    }
+  }
+
+  async signInExistingPlayer() {
+    while (true) {
+      const { name } = await this.inquirer.getPlayerName()
+      const { password } = await this.inquirer.getPlayerPassword()
+      const user = await this.server.signIn(name, password)
+      if (user) {
+        this.console.displayLoginSuccess()
+        this.name = user.name
+        this.userId = user.id
+        const { difficulty } = await this.inquirer.getDifficulty()
+        this.difficulty = this.parseInput(difficulty)
+        return
+      }
+      this.console.displayLoginFailure()
+    }
   }
 
   processEndgameOptions(endgame: string): boolean | void {
-    const command = endgame.split(' ')[0].toLowerCase()
+    const command = this.parseInput(endgame)
     if (command === 'play') {
       return true
     } else if (command === 'quit') {
@@ -58,16 +93,13 @@ export class Game {
   }
 
   async setBoard() {
-    if (!this.userId) {
-      const user = await this.server.createUser(this.name)
-      this.userId = user.id
-    }
     const game = await this.server.createGame(this.userId, this.difficulty)
     this.gameId = game.id
   }
 
   async startGameLoop() {
     let game = null
+
     this.console.displayInstructions()
     this.console.displayGoodLuck(this.name)
     while (true) {
@@ -89,6 +121,9 @@ export class Game {
           : this.console.displayVictory()
       }
     }
+  }
+  private parseInput = (input: string): string => {
+    return input.split(' ')[0].toLowerCase()
   }
 
   private mapStringToNumber = (array: string[]): number[] => {

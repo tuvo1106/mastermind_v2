@@ -10,22 +10,18 @@ interface GuessInputs {
 export class Inquirer {
   constructor() {}
 
-  getEndgameOptions() {
+  getSignInOptions() {
     return inquirer.prompt([
       {
         type: 'list',
-        name: 'endgame',
-        message: 'What would you like to do next?',
-        choices: [
-          'Play again.',
-          { name: 'View leader board.', disabled: 'In development' },
-          'Quit game.',
-        ],
+        name: 'signIn',
+        message: 'Please select an option:',
+        choices: ['New player', 'Sign in'],
       },
     ])
   }
 
-  getPlayerOptions() {
+  getPlayerName() {
     return inquirer.prompt([
       {
         type: 'input',
@@ -38,6 +34,11 @@ export class Inquirer {
           return true
         },
       },
+    ])
+  }
+
+  getDifficulty() {
+    return inquirer.prompt([
       {
         type: 'list',
         name: 'difficulty',
@@ -53,6 +54,16 @@ export class Inquirer {
             disabled: 'Unavailable at this time',
           },
         ],
+      },
+    ])
+  }
+
+  getPlayerPassword() {
+    return inquirer.prompt([
+      {
+        type: 'password',
+        name: 'password',
+        message: 'What is your password?',
       },
     ])
   }
@@ -75,5 +86,20 @@ export class Inquirer {
       }
     })
     return inquirer.prompt(questionArray)
+  }
+
+  getEndgameOptions() {
+    return inquirer.prompt([
+      {
+        type: 'list',
+        name: 'endgame',
+        message: 'What would you like to do next?',
+        choices: [
+          'Play again.',
+          { name: 'View leader board.', disabled: 'In development' },
+          'Quit game.',
+        ],
+      },
+    ])
   }
 }
