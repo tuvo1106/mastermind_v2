@@ -1,11 +1,12 @@
 import axios from 'axios'
+import { NotFoundError } from '../../application/errors/not-found-error'
 
 import { logger } from '../../infra/logger/winston-config-stream'
 
-class NumberGeneratorService {
+export class NumberGeneratorService {
   private readonly DEFAULT_TOTAL_NUM = 4
   private readonly DEFAULT_MIN = 0
-  private readonly DEFAULT_MAX = 9
+  private readonly DEFAULT_MAX = 7
 
   constructor() {}
 
@@ -22,6 +23,9 @@ class NumberGeneratorService {
     }
     try {
       const { status, data } = await this.getRandomNumbersFromAPI(num, min, max)
+      if (status !== 200) {
+        throw new NotFoundError()
+      }
       const arrayOfNumbers = this.parseStringToNumbers(data)
       logger.info(`Response: { status: ${status}, data: ${arrayOfNumbers} }`)
       return arrayOfNumbers

@@ -123,13 +123,7 @@ class InMemoryRepository extends Repository {
     }
   ) {
     const gameIndex = this.findGameIndexById(gameId)
-    if (gameIndex === -1) {
-      throw new NotFoundError()
-    }
     const game = this.db.games[gameIndex]
-    if (game.userId !== userId) {
-      throw new NotFoundError()
-    }
     const updatedGame = {
       ...game,
       history: params.history,

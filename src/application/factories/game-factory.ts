@@ -28,11 +28,6 @@ class GameFactory {
     return this
   }
 
-  setGuesses(guesses: number) {
-    this.totalGuesses = guesses
-    return this
-  }
-
   setUserId(userId: string) {
     this.userId = userId
     return this

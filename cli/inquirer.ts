@@ -51,7 +51,7 @@ export class Inquirer {
           new inquirer.Separator(),
           {
             name: 'Dark Souls - 6 turns',
-            disabled: 'Unavailable at this time',
+            disabled: 'Currently in development',
           },
         ],
       },
@@ -78,8 +78,8 @@ export class Inquirer {
           if (isNaN(value) || !!(value % 1)) {
             return 'Please enter in a number.'
           }
-          if (+value < 0 || +value > 9) {
-            return 'Please enter in a number between 0 and 9.'
+          if (+value < 0 || +value > 7) {
+            return 'Please enter in a number between 0 and 7.'
           }
           return true
         },
