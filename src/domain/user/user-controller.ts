@@ -1,3 +1,4 @@
+import { BadRequestError } from './../../application/errors/bad-request-error'
 import express from 'express'
 import { body } from 'express-validator'
 
@@ -11,11 +12,24 @@ const basePath = '/api/v1/users'
 router.post(
   basePath,
   body('name').not().isEmpty().withMessage('Name is required.'),
+  body('password').not().isEmpty().withMessage('Password is required.'),
   validateRequest,
   async (req, res) => {
-    const { name } = req.body
-    const user = await userService.createUser(name)
+    const { name, password } = req.body
+    const user = await userService.createUser(name, password)
     res.status(201).send(user)
+  }
+)
+
+router.post(
+  basePath + '/sign-in',
+  body('name').not().isEmpty().withMessage('Name is required.'),
+  body('password').not().isEmpty().withMessage('Password is required.'),
+  validateRequest,
+  async (req, res) => {
+    const { name, password } = req.body
+    const user = await userService.signInUser(name, password)
+    res.status(200).send(user)
   }
 )
 
@@ -31,15 +45,17 @@ router.delete(basePath + '/:userId', async (req, res) => {
   res.sendStatus(204)
 })
 
-router.put(
-  basePath + '/:userId',
-  body('name').not().isEmpty().withMessage('Name cannot be empty.'),
-  validateRequest,
-  async (req, res) => {
-    const { userId } = req.params
-    const user = await userService.updateUser(userId, req.body)
-    res.status(200).send(user)
+router.put(basePath + '/:userId', async (req, res) => {
+  const { userId } = req.params
+  const { name, password } = req.body
+  if (name === '') {
+    throw new BadRequestError('Name cannot be an empty string.')
   }
-)
+  if (password == '') {
+    throw new BadRequestError('Password cannot be an empty string.')
+  }
+  const user = await userService.updateUser(userId, { name, password })
+  res.status(200).send(user)
+})
 
 export { router as userController }

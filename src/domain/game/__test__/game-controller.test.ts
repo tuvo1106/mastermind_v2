@@ -4,11 +4,15 @@ import app from '../../../app'
 import { GameStatus } from '../../../application/enums/gameStatus'
 import { inMemoryRepository } from '../../../infra/repository/in-memory-repository'
 
-const createUser = async (name: string) => {
+const createUser = async (
+  name: string = 'Tu',
+  password: string = 'password'
+) => {
   const res = await request(app)
     .post('/api/v1/users')
     .send({
       name,
+      password,
     })
     .expect(201)
   return res.body.id
@@ -33,8 +37,7 @@ describe('game', () => {
 
   beforeEach(async () => {
     inMemoryRepository.flush()
-    const name = 'Tu'
-    userId = await createUser(name)
+    userId = await createUser()
   })
 
   it('returns a 201 if a new game is able to be created', async () => {
@@ -89,10 +92,12 @@ describe('game', () => {
   })
 
   it('returns a 400 if difficulty is not a string', async () => {
-    return await request(app)
+    const res = await request(app)
       .post('/api/v1/users/:userId/games')
       .send({ difficulty: 3 })
       .expect(400)
+
+    expect(res.body.errors[0].message).toEqual('Difficulty must be a string.')
   })
 
   it('returns a game if the game and user exists', async () => {
@@ -113,17 +118,21 @@ describe('game', () => {
 
     userId = 'invalid_id'
 
-    await request(app)
+    res = await request(app)
       .get(`/api/v1/users/${userId}/games/${gameId}`)
       .expect(404)
+
+    expect(res.body.errors[0].message).toEqual('Route not found.')
   })
 
   it('returns a 404 if the game does not exist on GET', async () => {
     const gameId = 'invalid_id'
 
-    await request(app)
+    const res = await request(app)
       .get(`/api/v1/users/${userId}/games/${gameId}`)
       .expect(404)
+
+    expect(res.body.errors[0].message).toEqual('Route not found.')
   })
 
   it('returns a 204 if a valid game is deleted', async () => {
@@ -142,9 +151,11 @@ describe('game', () => {
   it('returns a 404 if a game does not exist on DELETE', async () => {
     const gameId = 'invalid_id'
 
-    await request(app)
+    const res = await request(app)
       .delete(`/api/v1/users/${userId}/games/${gameId}`)
       .expect(404)
+
+    expect(res.body.errors[0].message).toEqual('Route not found.')
   })
 
   it('returns a 404 if a user is not associated with a game on DELETE', async () => {
@@ -153,9 +164,11 @@ describe('game', () => {
 
     userId = 'invalid_id'
 
-    await request(app)
+    res = await request(app)
       .delete(`/api/v1/users/${userId}/games/${gameId}`)
       .expect(404)
+
+    expect(res.body.errors[0].message).toEqual('Route not found.')
   })
 
   it('returns correct info about a game after a winning guess is submitted', async () => {
@@ -210,50 +223,60 @@ describe('game', () => {
   })
 
   it('returns a 400 if the guess length is invalid', async () => {
-    const res = await createGame(userId, {})
+    let res = await createGame(userId, {})
     const { id } = res.body
 
-    await request(app)
+    res = await request(app)
       .post(`/api/v1/users/${userId}/games/${id}/guess`)
       .send({
         guess: [1, 2, 3],
       })
       .expect(400)
+
+    expect(res.body.errors[0].message).toEqual(
+      'Guess length and board length do not match.'
+    )
   })
 
   it('returns a 400 if the guess is empty', async () => {
-    const res = await createGame(userId, {})
+    let res = await createGame(userId, {})
     const { id } = res.body
 
-    await request(app)
+    res = await request(app)
       .post(`/api/v1/users/${userId}/games/${id}/guess`)
       .send({
         guess: [],
       })
       .expect(400)
+
+    expect(res.body.errors[0].message).toEqual('Guess cannot be empty.')
   })
 
   it('returns a 400 if the guess has non-numeric values', async () => {
-    const res = await createGame(userId, {})
+    let res = await createGame(userId, {})
     const { id } = res.body
 
-    await request(app)
+    res = await request(app)
       .post(`/api/v1/users/${userId}/games/${id}/guess`)
       .send({
         guess: ['1', '2', '3', '4'],
       })
       .expect(400)
+
+    expect(res.body.errors[0].message).toEqual('Each guess must be a number.')
   })
 
   it('returns a 400 if the guess has non-integer values', async () => {
-    const res = await createGame(userId, {})
+    let res = await createGame(userId, {})
     const { id } = res.body
 
-    await request(app)
+    res = await request(app)
       .post(`/api/v1/users/${userId}/games/${id}/guess`)
       .send({
         guess: [1.5, 2, 3, 4],
       })
       .expect(400)
+
+    expect(res.body.errors[0].message).toEqual('Each guess must be an integer.')
   })
 })

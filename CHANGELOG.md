@@ -4,11 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [0.3.0] - 2021-05-03
+
+#### Added
+
+- Password field on user
+- More tests for better test coverage
+
+#### Changed
+
+- Game will allow users to sign in
+- Remove logging from game CLI
+- UserFactory can now set ids and passwords
+- Update tests to ensure error messages are correct
+
 ### [0.2.0] - 2021-05-03
 
 #### Added
 
-- CLI game
+- Game CLI
 - Game, Server, Console, Inquirer classes
 
 #### Changed

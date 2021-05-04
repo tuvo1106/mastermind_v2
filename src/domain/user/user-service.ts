@@ -1,3 +1,4 @@
+import { BadRequestError } from './../../application/errors/bad-request-error'
 import { Repository } from '../../infra/repository/respository.interface'
 import { inMemoryRepository } from './../../infra/repository/in-memory-repository'
 import { UserEntity } from './user-entity'
@@ -9,8 +10,16 @@ class UserService {
     this.repository = repository
   }
 
-  async createUser(name: string): Promise<UserEntity> {
-    return await this.repository.createUser(name)
+  async createUser(name: string, password: string): Promise<UserEntity> {
+    return await this.repository.createUser(name, password)
+  }
+
+  async signInUser(name: string, password: string): Promise<UserEntity> {
+    const user = await this.repository.getUserByName(name)
+    if (user.password === password) {
+      return user
+    }
+    throw new BadRequestError('Invalid credentials.')
   }
 
   async getUser(userId: string): Promise<UserEntity> {
@@ -23,7 +32,7 @@ class UserService {
 
   async updateUser(
     userId: string,
-    params: { name: string }
+    params: { name: string; password: string }
   ): Promise<UserEntity> {
     return await this.repository.updateUser(userId, params)
   }

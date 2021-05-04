@@ -23,11 +23,15 @@ class InMemoryRepository extends Repository {
     super()
   }
 
-  async createUser(name: string) {
+  async createUser(name: string, password: string, userId: string = '') {
     if (this.findUserByName(name)) {
       throw new BadRequestError(`User already exists: ${name}`)
     }
-    const user = new UserFactory().setName(name).build()
+    const user = new UserFactory()
+      .setName(name)
+      .setId(userId)
+      .setPassword(password)
+      .build()
     this.db.users.push(user)
     logger.info(`User created: ${JSON.stringify(user)}`)
     return user
@@ -42,6 +46,14 @@ class InMemoryRepository extends Repository {
     return user
   }
 
+  async getUserByName(name: string) {
+    const user = this.findUserByName(name)
+    if (user === undefined) {
+      throw new BadRequestError(`User not found: ${name}`)
+    }
+    return user
+  }
+
   async deleteUser(userId: string) {
     const userIndex = this.findUserIndexById(userId)
     if (userIndex === -1) {
@@ -51,14 +63,18 @@ class InMemoryRepository extends Repository {
     this.db.users.splice(userIndex, 1)
   }
 
-  async updateUser(userId: string, params: { name: string }) {
+  async updateUser(userId: string, params: { name: string; password: string }) {
     let user = this.findUserById(userId)
     if (!user) {
       throw new NotFoundError()
     }
+    const updatedName = params.name !== undefined ? params.name : user.name
+    const updatedPassword =
+      params.password !== undefined ? params.password : user.password
     user = {
       ...user,
-      name: params.name,
+      name: updatedName,
+      password: updatedPassword,
     }
     logger.info(`User updated: ${JSON.stringify(user)}`)
     return user

@@ -1,18 +1,29 @@
 import axios from 'axios'
 
-import { logger } from '../src/infra/logger/winston-config-stream'
-
 export class Server {
   constructor() {}
 
-  async createUser(name: string) {
+  async createUser(name: string, password: string) {
     try {
       const res = await axios.post('http://localhost:3000/api/v1/users', {
         name,
+        password,
       })
       return res.data
     } catch (err) {
-      logger.error(err.message)
+      return null
+    }
+  }
+
+  async signIn(name: string, password: string) {
+    try {
+      const res = await axios.post(
+        'http://localhost:3000/api/v1/users/sign-in',
+        { name, password }
+      )
+      return res.data
+    } catch (err) {
+      return null
     }
   }
 
@@ -26,7 +37,7 @@ export class Server {
       )
       return res.data
     } catch (err) {
-      logger.error(err.message)
+      return null
     }
   }
 
@@ -37,7 +48,7 @@ export class Server {
       )
       return res.data
     } catch (err) {
-      logger.error(err.message)
+      return null
     }
   }
 
@@ -51,7 +62,7 @@ export class Server {
       )
       return res.data
     } catch (err) {
-      logger.error(err.message)
+      return null
     }
   }
 }
