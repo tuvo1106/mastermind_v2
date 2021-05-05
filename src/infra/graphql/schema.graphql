@@ -1,0 +1,75 @@
+type Query {
+  ping: AppHealth
+  getUser(userId: ID): User!
+  getGame(userId: ID, gameId: ID): Game!
+}
+
+type Mutation {
+  createUser(data: UserInput!): User!
+  signIn(data: UserInput): User!
+  deleteUser(data: DeleteUserInput!): String
+  updateUser(data: UpdateUserInput!): User!
+  createGame(data: CreateGameInput!): Game!
+  deleteGame(data: DeleteGameInput!): String
+  guess(data: GuessInput): Game!
+}
+
+type AppHealth {
+  uptime: Float!
+  status: String!
+  timestamp: String!
+}
+
+type User {
+  id: ID!
+  name: String!
+  password: String!
+}
+
+type Game {
+  id: ID!
+  createdAt: String!
+  state: String!
+  totalGuesses: Int!
+  guessesRemaining: Int!
+  board: [Int!]!
+  history: [Score!]!
+  userId: ID!
+}
+
+type Score {
+  correctColors: Int!
+  correctPositions: Int!
+  guess: [Int!]!
+}
+
+input UserInput {
+  name: String!
+  password: String!
+}
+
+input DeleteUserInput {
+  userId: ID!
+}
+
+input UpdateUserInput {
+  userId: ID!
+  name: String!
+  password: String!
+}
+
+input CreateGameInput {
+  userId: ID!
+  difficulty: String
+}
+
+input DeleteGameInput {
+  userId: ID!
+  gameId: ID!
+}
+
+input GuessInput {
+  userId: ID!
+  gameId: ID!
+  guess: [Int!]!
+}

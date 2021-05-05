@@ -8,7 +8,7 @@ class HealthCheckService {
     return {
       uptime: process.uptime(),
       status: AppStatus.OK,
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
     }
   }
 }

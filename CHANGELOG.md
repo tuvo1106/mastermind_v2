@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [0.4.0] - 2021-05-04
+
+#### Added
+
+- GraphQL support for all endpoints
+- Custom validator classes instead of relying on outside lib
+  - Allows for better decoupling of application logic
+- UserParamsValidatorService
+- More tests
+- More logging at persistence layer
+
+#### Changed
+
+- Update Swagger docs
+- Remove validation middleware
+- Trim controllers to have little to none business logic
+
 ### [0.3.2] - 2021-05-03
 
 #### Added

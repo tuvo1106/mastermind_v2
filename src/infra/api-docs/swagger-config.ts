@@ -12,7 +12,11 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./src/domain/user/*.ts', './src/domain/game/*.ts'],
+  apis: [
+    './src/domain/health-check/*.ts',
+    './src/domain/user/*.ts',
+    './src/domain/game/*.ts',
+  ],
 }
 
 export { swaggerOptions }

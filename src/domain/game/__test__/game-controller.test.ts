@@ -59,6 +59,14 @@ describe('game', () => {
     expect(history.length).toEqual(0)
   })
 
+  it('returns a 404 if an invalid user creates a game', async () => {
+    const res = await request(app)
+      .post(`/api/v1/users/invalid-id/games`)
+      .expect(404)
+
+    expect(res.body.errors[0].message).toEqual('Route not found.')
+  })
+
   it('returns a a new game with the correct amount of guesses if a `easy` difficulty is selected', async () => {
     const res = await createGame(userId, { difficulty: 'easy' })
 
@@ -93,7 +101,7 @@ describe('game', () => {
 
   it('returns a 400 if difficulty is not a string', async () => {
     const res = await request(app)
-      .post('/api/v1/users/:userId/games')
+      .post(`/api/v1/users/${userId}/games`)
       .send({ difficulty: 3 })
       .expect(400)
 
@@ -116,7 +124,7 @@ describe('game', () => {
     let res = await createGame(userId, {})
     const gameId = res.body.id
 
-    userId = 'invalid_id'
+    userId = 'invalid-id'
 
     res = await request(app)
       .get(`/api/v1/users/${userId}/games/${gameId}`)
@@ -126,7 +134,7 @@ describe('game', () => {
   })
 
   it('returns a 404 if the game does not exist on GET', async () => {
-    const gameId = 'invalid_id'
+    const gameId = 'invalid-id'
 
     const res = await request(app)
       .get(`/api/v1/users/${userId}/games/${gameId}`)
@@ -149,7 +157,7 @@ describe('game', () => {
   })
 
   it('returns a 404 if a game does not exist on DELETE', async () => {
-    const gameId = 'invalid_id'
+    const gameId = 'invalid-id'
 
     const res = await request(app)
       .delete(`/api/v1/users/${userId}/games/${gameId}`)
@@ -162,7 +170,7 @@ describe('game', () => {
     let res = await createGame(userId, {})
     const gameId = res.body.id
 
-    userId = 'invalid_id'
+    userId = 'invalid-id'
 
     res = await request(app)
       .delete(`/api/v1/users/${userId}/games/${gameId}`)

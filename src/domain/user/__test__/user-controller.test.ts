@@ -38,18 +38,27 @@ describe('user', () => {
   })
 
   it('returns a 400 if a name or password is not provided on POST', async () => {
-    await request(app).post('/api/v1/users').send({}).expect(400)
+    const res = await request(app).post('/api/v1/users').send({}).expect(400)
+
+    expect(res.body.errors[0].message).toEqual('Name is required.')
   })
 
   it('returns a 400 if a name is not provided on POST', async () => {
-    await request(app)
+    const res = await request(app)
       .post('/api/v1/users')
       .send({ password: 'password' })
       .expect(400)
+
+    expect(res.body.errors[0].message).toEqual('Name is required.')
   })
 
   it('returns a 400 if a password is not provided on POST', async () => {
-    await request(app).post('/api/v1/users').send({ name: 'Tu' }).expect(400)
+    const res = await request(app)
+      .post('/api/v1/users')
+      .send({ name: 'Tu' })
+      .expect(400)
+
+    expect(res.body.errors[0].message).toEqual('Password is required.')
   })
 
   it('returns a 400 if a name is an empty string on POST', async () => {
@@ -57,7 +66,10 @@ describe('user', () => {
       .post('/api/v1/users')
       .send({ name: '', password: 'password' })
       .expect(400)
-    expect(res.body.errors[0].message).toEqual('Name is required.')
+
+    expect(res.body.errors[0].message).toEqual(
+      'Name cannot be an empty string.'
+    )
   })
 
   it('returns a 400 if a password is an empty string on POST', async () => {
@@ -66,7 +78,9 @@ describe('user', () => {
       .send({ name: 'Tu', password: '' })
       .expect(400)
 
-    expect(res.body.errors[0].message).toEqual('Password is required.')
+    expect(res.body.errors[0].message).toEqual(
+      'Password cannot be an empty string.'
+    )
   })
 
   it('returns a user if that user exists', async () => {
@@ -230,7 +244,9 @@ describe('user', () => {
       .send({ name: '', password: 'tacos' })
       .expect(400)
 
-    expect(res.body.errors[0].message).toEqual('Name is required.')
+    expect(res.body.errors[0].message).toEqual(
+      'Name cannot be an empty string.'
+    )
   })
 
   it('returns a 400 if a user signs in without a blank password', async () => {
@@ -241,6 +257,8 @@ describe('user', () => {
       .send({ name: 'Tu', password: '' })
       .expect(400)
 
-    expect(res.body.errors[0].message).toEqual('Password is required.')
+    expect(res.body.errors[0].message).toEqual(
+      'Password cannot be an empty string.'
+    )
   })
 })

@@ -18,8 +18,9 @@ This repository contains a Mastermind API written in Express and Typescript. Use
 - [How to Play](#how-to-play)
 - [Development](#development)
   - [API Docs](#api-docs)
+  - [GraphQL Server](#graphql-server)
+  - [Testing](#testing)
   - [Continuous Integration](#continuous-integration)
-  - [Unit Testing](#unit-testing)
 - [Authors](#authors)
 
 ## Dependencies
@@ -107,21 +108,27 @@ API docs can be found at `http://localhost:3000/api-docs` when the API is runnin
 
 ![swagger](/src/assets/swagger.png)
 
+### GraphQL Server
+
+Users can interact with the API using a GraphQL playground at `http://localhost:3000/graphql`.
+
+![graph-ql](/src/assets/graphql.png)
+
 ### Testing
 
 To run tests, use:
 
 `npm run test`
 
-There are currently `53` total tests in this project with `99.1%` test coverage. (5/3/21)
+There are currently `53` total tests in this project with `95.27%` test coverage. (5/4/21)
 
 ```
 -----------------------------------|---------|----------|---------|---------|-------------------
 File                               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 -----------------------------------|---------|----------|---------|---------|-------------------
-All files                          |    98.8 |    88.18 |   98.21 |    99.1 |
- src                               |      96 |      100 |   66.67 |     100 |
-  app.ts                           |      96 |      100 |   66.67 |     100 |
+All files                          |   92.93 |    87.61 |      90 |   95.27 |
+ src                               |   97.06 |      100 |   66.67 |     100 |
+  app.ts                           |   97.06 |      100 |   66.67 |     100 |
  src/application/enums             |     100 |      100 |     100 |     100 |
   appStatus.ts                     |     100 |      100 |     100 |     100 |
   gameStatus.ts                    |     100 |      100 |     100 |     100 |
@@ -129,18 +136,16 @@ All files                          |    98.8 |    88.18 |   98.21 |    99.1 |
   bad-request-error.ts             |     100 |       50 |     100 |     100 | 7
   custom-error.interface.ts        |     100 |       50 |     100 |     100 | 5
   not-found-error.ts               |     100 |       50 |     100 |     100 | 7
-  request-validation-error.ts      |     100 |       50 |     100 |     100 | 8
  src/application/factories         |     100 |       50 |     100 |     100 |
   game-factory.ts                  |     100 |      100 |     100 |     100 |
   user-factory.ts                  |     100 |       50 |     100 |     100 | 33
- src/application/middlewares       |   94.74 |       75 |     100 |   93.75 |
+ src/application/middlewares       |    87.5 |       50 |     100 |   85.71 |
   error-handler.ts                 |    87.5 |       50 |     100 |   85.71 | 17
-  validate-request.ts              |     100 |      100 |     100 |     100 |
  src/application/utils             |     100 |       50 |     100 |     100 |
   createDirIfNotExists.ts          |     100 |       50 |     100 |     100 | 4
- src/domain/game                   |   97.52 |    91.49 |   96.88 |   97.84 |
+ src/domain/game                   |   97.58 |    91.49 |   96.88 |   97.22 |
   game-controller.ts               |     100 |      100 |     100 |     100 |
-  game-params-validator-service.ts |   94.74 |    91.67 |     100 |     100 | 12
+  game-params-validator-service.ts |      95 |    91.67 |     100 |      95 | 15
   game-service.ts                  |     100 |      100 |     100 |     100 |
   number-generator-service.ts      |   93.18 |       75 |    87.5 |    92.5 | 39-41
  src/domain/health-check           |     100 |      100 |     100 |     100 |
@@ -148,20 +153,26 @@ All files                          |    98.8 |    88.18 |   98.21 |    99.1 |
   health-check-service.ts          |     100 |      100 |     100 |     100 |
  src/domain/user                   |     100 |      100 |     100 |     100 |
   user-controller.ts               |     100 |      100 |     100 |     100 |
+  user-params-validator-service.ts |     100 |      100 |     100 |     100 |
   user-service.ts                  |     100 |      100 |     100 |     100 |
+ src/infra/api-docs                |     100 |      100 |     100 |     100 |
+  swagger-config.ts                |     100 |      100 |     100 |     100 |
+ src/infra/graphql                 |   36.36 |        0 |       0 |   51.28 |
+  Mutation.ts                      |    12.5 |      100 |       0 |   22.22 | 13-58
+  Query.ts                         |   41.67 |        0 |       0 |      50 | 9-27
+  apollo-server-config.ts          |     100 |      100 |     100 |     100 |
  src/infra/logger                  |     100 |      100 |     100 |     100 |
   winston-config-stream.ts         |     100 |      100 |     100 |     100 |
  src/infra/repository              |     100 |    92.31 |     100 |     100 |
-  in-memory-repository.ts          |     100 |    92.31 |     100 |     100 | 26,71
+  in-memory-repository.ts          |     100 |    92.31 |     100 |     100 | 26,77
   respository.interface.ts         |     100 |      100 |     100 |     100 |
 -----------------------------------|---------|----------|---------|---------|-------------------
 
 Test Suites: 7 passed, 7 total
-Tests:       1 skipped, 52 passed, 53 total
+Tests:       1 skipped, 53 passed, 54 total
 Snapshots:   0 total
-Time:        3.363 s, estimated 7 s
+Time:        3.557 s, estimated 13 s
 Ran all test suites.
-
 ```
 
 ### Continuous Integration
@@ -176,4 +187,3 @@ Created by:
 
 - [Tu Vo](https://github.com/tuvo1106)
 - Email: tuvo1106@gmail.com
-  onst o
