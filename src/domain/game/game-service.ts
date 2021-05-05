@@ -6,15 +6,21 @@ import { Repository } from '../../infra/repository/respository.interface'
 import { inMemoryRepository } from './../../infra/repository/in-memory-repository'
 import { GameEntity, Score } from './game-entity'
 import { GameStatus } from '../../application/enums/gameStatus'
+import { gameParamsValidatorService } from './game-params-validator-service'
+import { userService } from '../user/user-service'
 
 class GameService {
   private repository
+  private validator
 
   constructor(repository: Repository) {
     this.repository = repository
+    this.validator = gameParamsValidatorService
   }
 
   async createGame(userId: string, difficulty: string): Promise<GameEntity> {
+    await userService.getUser(userId)
+    this.validator.validateDifficulty(difficulty)
     const guesses = this.getNumberOfGuessesForDifficulty(difficulty)
     const numbers = await numberGeneratorService.getRandomNumbers()
     return await this.repository.createGame(userId, numbers, guesses)
@@ -29,6 +35,7 @@ class GameService {
   }
 
   async processGuess(userId: string, gameId: string, guess: number[]) {
+    this.validator.validateGuess(guess)
     const game = await this.repository.getGame(userId, gameId)
     if (game.state === GameStatus.WIN || game.state === GameStatus.LOSE) {
       throw new BadRequestError('Game is already over.')

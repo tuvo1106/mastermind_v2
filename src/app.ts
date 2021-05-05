@@ -11,6 +11,7 @@ import { userController } from './domain/user/user-controller'
 import { gameController } from './domain/game/game-controller'
 
 import { logger } from './infra/logger/winston-config-stream'
+import { gqlServer } from './infra/graphql/apollo-server-config'
 import { swaggerOptions } from './infra/api-docs/swagger-config'
 
 import { errorHandler } from './application/middlewares/error-handler'
@@ -29,6 +30,9 @@ app.use(json())
 // Swagger
 const specs = swaggerJsDoc(swaggerOptions)
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs))
+
+// GraphQL
+gqlServer.applyMiddleware({ app })
 
 // Morgan/Winston
 // @ts-ignore

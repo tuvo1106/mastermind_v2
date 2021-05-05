@@ -25,6 +25,7 @@ class InMemoryRepository extends Repository {
 
   async createUser(name: string, password: string, userId: string = '') {
     if (this.findUserByName(name)) {
+      logger.error(`User already exists: ${name}`)
       throw new BadRequestError(`User already exists: ${name}`)
     }
     const user = new UserFactory()
@@ -40,6 +41,7 @@ class InMemoryRepository extends Repository {
   async getUser(userId: string) {
     const user = this.findUserById(userId)
     if (!user) {
+      logger.error(`UserId not found: ${userId}`)
       throw new NotFoundError()
     }
     logger.info(`User found: ${JSON.stringify(user)}`)
@@ -49,6 +51,7 @@ class InMemoryRepository extends Repository {
   async getUserByName(name: string) {
     const user = this.findUserByName(name)
     if (user === undefined) {
+      logger.error(`User not found: ${name}`)
       throw new BadRequestError(`User not found: ${name}`)
     }
     return user
@@ -57,6 +60,7 @@ class InMemoryRepository extends Repository {
   async deleteUser(userId: string) {
     const userIndex = this.findUserIndexById(userId)
     if (userIndex === -1) {
+      logger.error(`UserId not found: ${userId}`)
       throw new NotFoundError()
     }
     logger.info(`User deleted: ${JSON.stringify(this.db.users[userIndex])}`)
@@ -64,20 +68,23 @@ class InMemoryRepository extends Repository {
   }
 
   async updateUser(userId: string, params: { name: string; password: string }) {
-    let user = this.findUserById(userId)
-    if (!user) {
+    const userIndex = this.findUserIndexById(userId)
+    if (userIndex == -1) {
+      logger.error(`UserId ${userId} not found.`)
       throw new NotFoundError()
     }
+    const user = this.db.users[userIndex]
     const updatedName = params.name !== undefined ? params.name : user.name
     const updatedPassword =
       params.password !== undefined ? params.password : user.password
-    user = {
+    const updatedUser = {
       ...user,
       name: updatedName,
       password: updatedPassword,
     }
-    logger.info(`User updated: ${JSON.stringify(user)}`)
-    return user
+    this.db.users.splice(userIndex, 1, updatedUser)
+    logger.info(`User updated: ${JSON.stringify(updatedUser)}`)
+    return updatedUser
   }
 
   async createGame(userId: string, board: number[], guesses: number) {
@@ -94,6 +101,9 @@ class InMemoryRepository extends Repository {
   async getGame(userId: string, gameId: string) {
     const game = this.findGameByIds(userId, gameId)
     if (!game) {
+      logger.error(
+        `Game not found with: {userId: ${userId}, gameId: ${gameId}}`
+      )
       throw new NotFoundError()
     }
     logger.info(`Game found: ${JSON.stringify(game)}`)
@@ -103,10 +113,14 @@ class InMemoryRepository extends Repository {
   async deleteGame(userId: string, gameId: string) {
     const gameIndex = this.findGameIndexById(gameId)
     if (gameIndex === -1) {
+      logger.error(`Game not found: ${gameId}`)
       throw new NotFoundError()
     }
     const game = this.db.games[gameIndex]
     if (game.userId !== userId) {
+      logger.error(
+        `Game not found with: {userId: ${userId}, gameId: ${gameId}}`
+      )
       throw new NotFoundError()
     }
     logger.info(`Game deleted: ${JSON.stringify(game)}`)
