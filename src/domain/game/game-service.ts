@@ -4,6 +4,7 @@ import { BadRequestError } from './../../application/errors/bad-request-error'
 import { numberGeneratorService } from './number-generator-service'
 import { Repository } from '../../infra/repository/respository.interface'
 import { inMemoryRepository } from './../../infra/repository/in-memory-repository'
+import { mongoRepository } from '../../infra/repository/mongo-repository'
 import { GameEntity, Score } from './game-entity'
 import { GameStatus } from '../../application/enums/gameStatus'
 import { gameParamsValidatorService } from './game-params-validator-service'
@@ -107,6 +108,11 @@ class GameService {
   }
 }
 
-const gameService = new GameService(inMemoryRepository)
+let gameService: GameService
+if (process.env.DB === 'mongo') {
+  gameService = new GameService(mongoRepository)
+} else {
+  gameService = new GameService(inMemoryRepository)
+}
 
 export { gameService }

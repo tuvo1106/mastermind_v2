@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid'
 import { UserEntity } from '../../domain/user/user-entity'
 
 class UserFactory {
-  readonly ID_SIZE = 6
+  readonly ID_SIZE = 24
 
   name: string = 'Tu'
   id: string = ''

@@ -13,7 +13,7 @@ const Query = {
     args: any,
     context: { userService: any },
     info: any
-  ): Promise<UserEntity> {
+  ): Promise<UserEntity | null> {
     const { userId } = args
     return await userService.getUser(userId)
   },

@@ -4,7 +4,7 @@ import { GameStatus } from '../enums/gameStatus'
 import { GameEntity, Score } from './../../domain/game/game-entity'
 
 class GameFactory {
-  readonly ID_SIZE = 6
+  readonly ID_SIZE = 24
 
   totalGuesses: number
   board: number[]

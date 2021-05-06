@@ -16,6 +16,7 @@ This repository contains a Mastermind API written in Express and Typescript. Use
   - [Git](#git)
   - [Installation](#installation)
 - [How to Play](#how-to-play)
+- [Data Persistence](#data-persistence)
 - [Development](#development)
   - [API Docs](#api-docs)
   - [GraphQL Server](#graphql-server)
@@ -100,6 +101,22 @@ guesses [1, 3, 6, 9], the feedback that is given will be:
   the only unmatched guess which is 1, therefore resulting in a mismatch of
   number and position.
 
+## Data Persistence
+
+By default, the app stores all game data in memory. However, users can choose to store data with MongoDB by using Docker containers.
+
+This requires an installation of a Docker client on your local operating system.
+
+- [Download Docker](https://www.docker.com/products/docker-desktop)
+
+- To start the MongoDB and Express app with Docker, use:
+
+`npm run docker`
+
+In the background, this runs `docker compose build && docker compose up` to start up the containers.
+
+Express will be running on port `3000` and MongoDB will be running on port `27017`.
+
 ## Development
 
 ### API Docs
@@ -110,7 +127,7 @@ API docs can be found at `http://localhost:3000/api-docs` when the API is runnin
 
 ### GraphQL Server
 
-Users can interact with the API using a GraphQL playground at `http://localhost:3000/graphql`.
+Users can also interact with the API using a GraphQL playground at `http://localhost:3000/graphql` when the API is running.
 
 ![graph-ql](/src/assets/graphql.png)
 
