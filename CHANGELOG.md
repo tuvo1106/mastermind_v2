@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [0.5.0] - 2021-05-05
+
+#### Added
+
+- Dockerfiles for MongoDB/Node containers
+- MongoRepository implementation
+- Jest setup script for different environments
+- Game and User mongoose schemas
+
+#### Changed
+
+- Change ID size to be 24 characters to match MongoDB ID's
+- Change seed script to be database agnostic
+- Change tests to be database agnostic
+
 ### [0.4.0] - 2021-05-04
 
 #### Added

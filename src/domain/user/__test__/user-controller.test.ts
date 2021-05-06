@@ -1,6 +1,5 @@
 import request from 'supertest'
-
-import { inMemoryRepository } from '../../../infra/repository/in-memory-repository'
+import mongoose from 'mongoose'
 
 import app from '../../../app'
 
@@ -15,10 +14,6 @@ const createUser = (name: string, password: string = 'password') => {
 }
 
 describe('user', () => {
-  beforeEach(() => {
-    inMemoryRepository.flush()
-  })
-
   it('returns a 201 if a new user is able to be created', async () => {
     const res = await createUser('Tu', 'tacos')
 
@@ -94,8 +89,8 @@ describe('user', () => {
   })
 
   it('returns a 404 if the user does not exist on GET', async () => {
-    const userId = 'abc123'
-    const res = await request(app).get(`/api/v1/users/${userId}`).expect(404)
+    const invalidId = mongoose.Types.ObjectId()
+    const res = await request(app).get(`/api/v1/users/${invalidId}`).expect(404)
 
     expect(res.body.errors[0].message).toEqual('Route not found.')
   })
@@ -110,8 +105,10 @@ describe('user', () => {
   })
 
   it('returns a 404 if an invalid user is deleted', async () => {
-    const userId = 'abc123'
-    const res = await request(app).delete(`/api/v1/users/${userId}`).expect(404)
+    const invalidId = mongoose.Types.ObjectId()
+    const res = await request(app)
+      .delete(`/api/v1/users/${invalidId}`)
+      .expect(404)
 
     expect(res.body.errors[0].message).toEqual('Route not found.')
   })
@@ -143,9 +140,9 @@ describe('user', () => {
   })
 
   it('returns a 404 if a user does not exist on PUT', async () => {
-    const userId = 'abc123'
+    const invalidId = mongoose.Types.ObjectId()
     const res = await request(app)
-      .put(`/api/v1/users/${userId}`)
+      .put(`/api/v1/users/${invalidId}`)
       .send({ name: 'Brenda', password: 'password' })
       .expect(404)
 

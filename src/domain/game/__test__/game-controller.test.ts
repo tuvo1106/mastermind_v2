@@ -1,8 +1,8 @@
 import request from 'supertest'
+import mongoose from 'mongoose'
 
 import app from '../../../app'
 import { GameStatus } from '../../../application/enums/gameStatus'
-import { inMemoryRepository } from '../../../infra/repository/in-memory-repository'
 
 const createUser = async (
   name: string = 'Tu',
@@ -36,7 +36,6 @@ describe('game', () => {
   let userId: string
 
   beforeEach(async () => {
-    inMemoryRepository.flush()
     userId = await createUser()
   })
 
@@ -60,8 +59,9 @@ describe('game', () => {
   })
 
   it('returns a 404 if an invalid user creates a game', async () => {
+    const invalidId = mongoose.Types.ObjectId()
     const res = await request(app)
-      .post(`/api/v1/users/invalid-id/games`)
+      .post(`/api/v1/users/${invalidId}/games`)
       .expect(404)
 
     expect(res.body.errors[0].message).toEqual('Route not found.')
@@ -123,18 +123,17 @@ describe('game', () => {
   it('returns a 404 if the user does not exist on GET', async () => {
     let res = await createGame(userId, {})
     const gameId = res.body.id
-
-    userId = 'invalid-id'
+    const invalidId = mongoose.Types.ObjectId()
 
     res = await request(app)
-      .get(`/api/v1/users/${userId}/games/${gameId}`)
+      .get(`/api/v1/users/${invalidId}/games/${gameId}`)
       .expect(404)
 
     expect(res.body.errors[0].message).toEqual('Route not found.')
   })
 
   it('returns a 404 if the game does not exist on GET', async () => {
-    const gameId = 'invalid-id'
+    const gameId = mongoose.Types.ObjectId()
 
     const res = await request(app)
       .get(`/api/v1/users/${userId}/games/${gameId}`)
@@ -157,7 +156,7 @@ describe('game', () => {
   })
 
   it('returns a 404 if a game does not exist on DELETE', async () => {
-    const gameId = 'invalid-id'
+    const gameId = mongoose.Types.ObjectId()
 
     const res = await request(app)
       .delete(`/api/v1/users/${userId}/games/${gameId}`)
@@ -170,10 +169,10 @@ describe('game', () => {
     let res = await createGame(userId, {})
     const gameId = res.body.id
 
-    userId = 'invalid-id'
+    const invalidId = mongoose.Types.ObjectId()
 
     res = await request(app)
-      .delete(`/api/v1/users/${userId}/games/${gameId}`)
+      .delete(`/api/v1/users/${invalidId}/games/${gameId}`)
       .expect(404)
 
     expect(res.body.errors[0].message).toEqual('Route not found.')
@@ -303,8 +302,9 @@ describe('game', () => {
   })
 
   it('returns a 404 if a game is not found on POST', async () => {
+    const invalidId = mongoose.Types.ObjectId()
     const res = await request(app)
-      .post(`/api/v1/users/${userId}/games/random-game/guess`)
+      .post(`/api/v1/users/${userId}/games/${invalidId}/guess`)
       .send({
         guess: [1, 2, 3, 4],
       })
