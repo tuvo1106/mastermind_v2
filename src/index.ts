@@ -6,6 +6,7 @@ import { logger } from './infra/logger/winston-config-stream'
 
 const startApp = () => {
   const PORT = process.env.PORT || 3000
+  checkEnvVariables()
   app.listen(PORT, async () => {
     if (process.env.DB === 'mongo') {
       await connectToMongo()
@@ -13,6 +14,21 @@ const startApp = () => {
     logger.info(`Connected to Express on port: ${PORT}.`)
     seedDatabase()
   })
+}
+
+const checkEnvVariables = () => {
+  if (process.env.DB !== 'local' && process.env.DB !== 'mongo') {
+    logger.warn(
+      'The following env variable is not set: `DB`. Defaulting to `local`.'
+    )
+    process.env.DB = 'local'
+  }
+  if (process.env.NODE_ENV === undefined || process.env.null) {
+    logger.warn(
+      'The following env variable is not set: `NODE_ENV`. Defaulting to `development`.'
+    )
+    process.env.NODE_ENV = 'development'
+  }
 }
 
 const connectToMongo = async () => {

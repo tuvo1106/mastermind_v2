@@ -2,9 +2,12 @@
 
 ## Todo
 
+- Add route for scores
+- Add extra difficulty
+
 ## Bugs
 
-- Delete all games associated with user on user delete
+- ~~Delete all games associated with user on user delete~~
 
 ## Tech Debt
 

@@ -53,6 +53,12 @@ class MongoRepository extends Repository {
       throw new NotFoundError()
     }
     logger.info(`User deleted: ${JSON.stringify(user)}`)
+    const games = await Game.find({
+      userId: userId,
+    })
+    games.forEach((game) => {
+      this.deleteGame(userId, game.id)
+    })
   }
 
   async updateUser(userId: string, params: { name: string; password: string }) {

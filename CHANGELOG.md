@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [0.5.1] - 2021-05-06
+
+#### Added
+
+- Test to cover edge case
+- Function to set default env variables if they are not set
+
+#### Changed
+
+- Fix bug on user deletion
+- Update README.md
+
 ### [0.5.0] - 2021-05-05
 
 #### Added
