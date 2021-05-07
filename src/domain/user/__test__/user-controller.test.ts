@@ -18,7 +18,10 @@ describe('user', () => {
     const res = await createUser('Tu', 'tacos')
 
     expect(res.body.name).toEqual('Tu')
-    expect(res.body.password).toEqual('tacos')
+    expect(res.body.password).toBeDefined()
+
+    // password should be hashed
+    expect(res.body.password).not.toEqual('tacos')
   })
 
   it('returns a 400 if the user already exists', async () => {
@@ -125,7 +128,7 @@ describe('user', () => {
     expect(updated.body.name).toEqual('Brenda')
   })
 
-  it('does not update user with invalid params', async () => {
+  it('does not update user with extraneous params', async () => {
     const res = await createUser('Tu')
     const userId = res.body.id
 
@@ -135,7 +138,6 @@ describe('user', () => {
       .expect(200)
 
     expect(updated.body.name).toEqual('Brenda')
-    expect(updated.body.password).toEqual('tacos')
     expect(updated.body.occupation).not.toBeDefined()
   })
 

@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [0.5.2] - 2021-05-06
+
+#### Added
+
+- Security middleware:
+  - express-rate-limiter - protection against DDOS attacks
+  - express-mongo-sanitize - protection against SQL injections
+  - hpp - protection against HTTP parameter pollution
+  - helmet - secures app by setting various HTTP headers
+
+#### Changed
+
+- Encrypt user passwords before persisting them
+- Simplify seed script
+
 ### [0.5.1] - 2021-05-06
 
 #### Added

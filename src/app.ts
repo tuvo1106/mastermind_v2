@@ -5,6 +5,10 @@ import { json } from 'body-parser'
 import morgan from 'morgan'
 import swaggerUI from 'swagger-ui-express'
 import swaggerJsDoc from 'swagger-jsdoc'
+import helmet from 'helmet'
+import hpp from 'hpp'
+import rateLimit from 'express-rate-limit'
+import mongoSanitize from 'express-mongo-sanitize'
 
 import { healthCheckController } from './domain/health-check/health-check-controller'
 import { userController } from './domain/user/user-controller'
@@ -26,6 +30,20 @@ const app = express()
 
 app.use(cors())
 app.use(json())
+
+// Security
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // for GraphQL
+  })
+)
+app.use(hpp())
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+})
+app.use(limiter)
+app.use(mongoSanitize())
 
 // Swagger
 const specs = swaggerJsDoc(swaggerOptions)

@@ -5,6 +5,7 @@ import { mongoRepository } from '../../infra/repository/mongo-repository'
 import { UserEntity } from './user-entity'
 import { userParamsValidatorService } from './user-params-validator-service'
 import { logger } from '../../infra/logger/winston-config-stream'
+import { authService } from './auth-service'
 
 class UserService {
   private repository
@@ -17,13 +18,18 @@ class UserService {
 
   async createUser(name: string, password: string): Promise<UserEntity> {
     this.validator.validateUser(name, password)
-    return await this.repository.createUser(name, password)
+    const hashedPassword = await authService.hashPassword(password)
+    return await this.repository.createUser(name, hashedPassword)
   }
 
   async signInUser(name: string, password: string): Promise<UserEntity> {
     userParamsValidatorService.validateUser(name, password)
     const user = await this.repository.getUserByName(name)
-    if (user?.password === password) {
+    const validPassword = await authService.validatePassword(
+      password,
+      user.password
+    )
+    if (validPassword) {
       return user
     }
     logger.error(`Invalid credentials - name: ${name}, password: ${password}`)
@@ -43,7 +49,14 @@ class UserService {
     params: { name: string; password: string }
   ): Promise<UserEntity> {
     this.validator.validateNonEmptyUser(params.name, params.password)
-    return await this.repository.updateUser(userId, params)
+    const hashedPassword =
+      params.password !== undefined
+        ? await authService.hashPassword(params.password)
+        : params.password
+    return await this.repository.updateUser(userId, {
+      name: params.name,
+      password: hashedPassword,
+    })
   }
 }
 
