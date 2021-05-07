@@ -258,4 +258,25 @@ describe('user', () => {
       'Password cannot be an empty string.'
     )
   })
+
+  it('deletes all games associated with a user when a user is deleted', async () => {
+    let res = await createUser('Tu')
+    const userId = res.body.id
+    const createGame = (userId: string, params: any) => {
+      return request(app)
+        .post(`/api/v1/users/${userId}/games`)
+        .send({ ...params })
+        .expect(201)
+    }
+
+    const game = await createGame(userId, {})
+
+    await request(app).delete(`/api/v1/users/${userId}`).expect(204)
+
+    res = await request(app)
+      .get(`/api/v1/users/${userId}/games/${game.body.id}`)
+      .expect(404)
+
+    expect(res.body.errors[0].message).toEqual('Route not found.')
+  })
 })

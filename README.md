@@ -22,6 +22,7 @@ This repository contains a Mastermind API written in Express and Typescript. Use
   - [GraphQL Server](#graphql-server)
   - [Testing](#testing)
   - [Continuous Integration](#continuous-integration)
+  - [Logging](#logging)
 - [Authors](#authors)
 
 ## Dependencies
@@ -68,7 +69,6 @@ In Mastermind, the player (aka the Codebreaker) has to guess a random sequence o
 |    Easy    |    0 - 7     |       12        |
 |   Normal   |    0 - 7     |       10        |
 |    Hard    |    0 - 7     |        8        |
-| Dark Souls |    0 - 7     |        6        |
 
 Each guess is made by typing in 4 consecutive numbers in the terminal.
 After each guess, the Codebreaker will get feedback on the previous
@@ -119,6 +119,15 @@ Express will be running on port `3000` and MongoDB will be running on port `2701
 
 ## Development
 
+### Environmental Variables
+
+You can set the following environmental variables to customize the app.
+
+- `NODE_ENV` ("development" or "test" or "production", defaulted to "development")
+- `DB` ("local" or "mongo", defaulted to "local")
+- `MONGO_PORT` (defaulted to 27017)
+- `PORT` (defaulted to 3000)
+
 ### API Docs
 
 API docs can be found at `http://localhost:3000/api-docs` when the API is running.
@@ -137,13 +146,13 @@ To run tests, use:
 
 `npm run test`
 
-There are currently `53` total tests in this project with `95.27%` test coverage. (5/4/21)
+There are currently `55` total tests in this project with `84.68%` test coverage. (5/6/21)
 
 ```
------------------------------------|---------|----------|---------|---------|-------------------
+-----------------------------------|---------|----------|---------|---------|------------------------------------------------------------
 File                               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
------------------------------------|---------|----------|---------|---------|-------------------
-All files                          |   92.93 |    87.61 |      90 |   95.27 |
+-----------------------------------|---------|----------|---------|---------|------------------------------------------------------------
+All files                          |   82.67 |    65.24 |   81.16 |   84.68 |
  src                               |   97.06 |      100 |   66.67 |     100 |
   app.ts                           |   97.06 |      100 |   66.67 |     100 |
  src/application/enums             |     100 |      100 |     100 |     100 |
@@ -160,18 +169,18 @@ All files                          |   92.93 |    87.61 |      90 |   95.27 |
   error-handler.ts                 |    87.5 |       50 |     100 |   85.71 | 17
  src/application/utils             |     100 |       50 |     100 |     100 |
   createDirIfNotExists.ts          |     100 |       50 |     100 |     100 | 4
- src/domain/game                   |   97.58 |    91.49 |   96.88 |   97.22 |
+ src/domain/game                   |   97.02 |     89.8 |   96.88 |    96.6 |
   game-controller.ts               |     100 |      100 |     100 |     100 |
   game-params-validator-service.ts |      95 |    91.67 |     100 |      95 | 15
-  game-service.ts                  |     100 |      100 |     100 |     100 |
+  game-service.ts                  |   98.61 |       96 |     100 |   98.39 | 113
   number-generator-service.ts      |   93.18 |       75 |    87.5 |    92.5 | 39-41
  src/domain/health-check           |     100 |      100 |     100 |     100 |
   health-check-controller.ts       |     100 |      100 |     100 |     100 |
   health-check-service.ts          |     100 |      100 |     100 |     100 |
- src/domain/user                   |     100 |      100 |     100 |     100 |
+ src/domain/user                   |    98.9 |    92.31 |     100 |   98.68 |
   user-controller.ts               |     100 |      100 |     100 |     100 |
   user-params-validator-service.ts |     100 |      100 |     100 |     100 |
-  user-service.ts                  |     100 |      100 |     100 |     100 |
+  user-service.ts                  |   97.14 |    85.71 |     100 |   96.67 | 52
  src/infra/api-docs                |     100 |      100 |     100 |     100 |
   swagger-config.ts                |     100 |      100 |     100 |     100 |
  src/infra/graphql                 |   36.36 |        0 |       0 |   51.28 |
@@ -180,15 +189,19 @@ All files                          |   92.93 |    87.61 |      90 |   95.27 |
   apollo-server-config.ts          |     100 |      100 |     100 |     100 |
  src/infra/logger                  |     100 |      100 |     100 |     100 |
   winston-config-stream.ts         |     100 |      100 |     100 |     100 |
- src/infra/repository              |     100 |    92.31 |     100 |     100 |
-  in-memory-repository.ts          |     100 |    92.31 |     100 |     100 | 26,77
+ src/infra/repository              |   65.02 |    39.13 |   72.97 |   67.03 |
+  in-memory-repository.ts          |   99.07 |    89.29 |     100 |   99.02 | 188
+  mongo-repository.ts              |   23.91 |     4.88 |   16.67 |   25.93 | 17-27,31-37,41-46,50-60,65-80,84-95,99-107,111-118,130-149
   respository.interface.ts         |     100 |      100 |     100 |     100 |
------------------------------------|---------|----------|---------|---------|-------------------
+ src/infra/repository/mongo/models |   55.56 |      100 |       0 |   55.56 |
+  game.ts                          |   55.56 |      100 |       0 |   55.56 | 64-66,73
+  user.ts                          |   55.56 |      100 |       0 |   55.56 | 32-34,41
+-----------------------------------|---------|----------|---------|---------|------------------------------------------------------------
 
 Test Suites: 7 passed, 7 total
-Tests:       1 skipped, 53 passed, 54 total
+Tests:       1 skipped, 54 passed, 55 total
 Snapshots:   0 total
-Time:        3.557 s, estimated 13 s
+Time:        5.513 s, estimated 29 s
 Ran all test suites.
 ```
 
@@ -197,6 +210,14 @@ Ran all test suites.
 This repository uses a CircleUI workflow that runs all tests on every commit. Contributors can see the results of the test before their merge their PR.
 
 ![circle_ci_pic](/src/assets/circle_ci.png)
+
+### Logging
+
+This app uses Winston and Morgan middleware to log activity to stdout and to a local file.
+
+The local file is rotated everyday.
+
+<img src="/src/assets/logs.png" alt="drawing" width="350"/>
 
 ## Authors
 

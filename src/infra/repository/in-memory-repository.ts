@@ -64,6 +64,7 @@ class InMemoryRepository extends Repository {
       throw new NotFoundError()
     }
     logger.info(`User deleted: ${JSON.stringify(this.db.users[userIndex])}`)
+    this.deleteAllGamesByUserId(userId)
     this.db.users.splice(userIndex, 1)
   }
 
@@ -179,6 +180,17 @@ class InMemoryRepository extends Repository {
 
   private findGameIndexById(gameId: string): number {
     return this.db.games.map((game) => game.id).indexOf(gameId)
+  }
+
+  private deleteAllGamesByUserId(userId: string): void {
+    this.db.games = this.db.games.filter((game) => {
+      if (game.userId !== userId) {
+        return true
+      } else {
+        logger.info(`Game deleted: ${JSON.stringify(game)}`)
+        return false
+      }
+    })
   }
 }
 
