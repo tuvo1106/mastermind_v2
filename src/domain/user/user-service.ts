@@ -27,7 +27,7 @@ class UserService {
     const user = await this.repository.getUserByName(name)
     const validPassword = await authService.validatePassword(
       password,
-      user.password
+      user.password || ''
     )
     if (validPassword) {
       return user

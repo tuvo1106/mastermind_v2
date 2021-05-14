@@ -1,3 +1,4 @@
+import { UserEntity } from './user-entity'
 import express from 'express'
 
 import { userService } from './user-service'
@@ -8,19 +9,19 @@ const basePath = '/api/v1/users'
 router.post(basePath, async (req, res) => {
   const { name, password } = req.body
   const user = await userService.createUser(name, password)
-  res.status(201).send(user)
+  res.status(201).send(sanitizeUser(user))
 })
 
 router.post(basePath + '/sign-in', async (req, res) => {
   const { name, password } = req.body
   const user = await userService.signInUser(name, password)
-  res.status(200).send(user)
+  res.status(200).send(sanitizeUser(user))
 })
 
 router.get(basePath + '/:userId', async (req, res) => {
   const { userId } = req.params
   const user = await userService.getUser(userId)
-  res.status(200).send(user)
+  res.status(200).send(sanitizeUser(user))
 })
 
 router.delete(basePath + '/:userId', async (req, res) => {
@@ -33,8 +34,19 @@ router.put(basePath + '/:userId', async (req, res) => {
   const { userId } = req.params
   const { name, password } = req.body
   const user = await userService.updateUser(userId, { name, password })
-  res.status(200).send(user)
+  res.status(200).send(sanitizeUser(user))
 })
+
+const sanitizeUser = (user: UserEntity | null): UserEntity | null => {
+  if (!user) {
+    return null
+  }
+  const safeUser = {
+    ...user,
+  }
+  delete safeUser.password
+  return safeUser
+}
 
 export { router as userController }
 

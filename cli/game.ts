@@ -12,6 +12,7 @@ export class Game {
   difficulty: string = this.DEFAULT_DIFFICULTY
   userId: string = ''
   gameId: string = ''
+  boardPositions: number = 4
 
   console: Console
   inquirer: Inquirer
@@ -95,6 +96,7 @@ export class Game {
   async setBoard() {
     const game = await this.server.createGame(this.userId, this.difficulty)
     this.gameId = game.id
+    this.boardPositions = game.board.length
   }
 
   async startGameLoop() {
@@ -107,7 +109,7 @@ export class Game {
         game = await this.server.getGame(this.userId, this.gameId)
       }
       this.console.displayGuessPrompt(game.guessesRemaining)
-      const guesses = await this.inquirer.getPlayerGuess()
+      const guesses = await this.inquirer.getPlayerGuess(this.boardPositions)
       game = await this.server.postGuess(
         this.userId,
         this.gameId,
