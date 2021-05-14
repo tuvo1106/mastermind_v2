@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### [0.6.0] - 2021-05-13
+
+#### Added
+
+- Difficulty levels now determine number of positions on board
+  - i.e. `easy` only has 3 numbers on board
+
+#### Changed
+
+- Refactor `getPlayerGuess` to dynamically get number of guesses
+  - Fix bug that users can enter in a blank string
+  - Remove unclear validator method for floats, use `Number.isInteger` instead
+- Enhance tests in gameService to have better descriptions
+  - Also add additional tests to cover more cases
+- API no longer passes back user password in any request
+
 ### [0.5.2] - 2021-05-06
 
 #### Added

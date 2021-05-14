@@ -18,10 +18,7 @@ describe('user', () => {
     const res = await createUser('Tu', 'tacos')
 
     expect(res.body.name).toEqual('Tu')
-    expect(res.body.password).toBeDefined()
-
-    // password should be hashed
-    expect(res.body.password).not.toEqual('tacos')
+    expect(res.body.password).not.toBeDefined()
   })
 
   it('returns a 400 if the user already exists', async () => {

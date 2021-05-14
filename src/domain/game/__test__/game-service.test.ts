@@ -16,39 +16,55 @@ describe('gameService', () => {
   })
 
   it('validates a guess with the correct response', () => {
-    let guess = [1, 2, 3, 4]
-    let board = [1, 2, 3, 4]
-    let res = gameService.getCorrectPositionsAndColors(guess, board)
+    const guess = [1, 2, 3, 4]
+    const board = [1, 2, 3, 4]
+    const res = gameService.getCorrectPositionsAndColors(guess, board)
 
     expect(res).toEqual({
       correctColors: 0,
       correctPositions: 4,
       guess,
     })
+  })
 
-    guess = [1, 2, 3, 4]
-    board = [5, 6, 7, 8]
-    res = gameService.getCorrectPositionsAndColors(guess, board)
+  it('validates a guess with the all incorrect colors and incorrect positions', () => {
+    const guess = [1, 2, 3, 4]
+    const board = [5, 6, 7, 8]
+    const res = gameService.getCorrectPositionsAndColors(guess, board)
 
     expect(res).toEqual({ correctColors: 0, correctPositions: 0, guess })
+  })
 
-    guess = [1, 2, 3, 4]
-    board = [4, 5, 6, 7]
-    res = gameService.getCorrectPositionsAndColors(guess, board)
+  it('validates a guess with a correct color, but incorrect positions', () => {
+    const guess = [1, 2, 3, 4]
+    const board = [4, 5, 6, 7]
+    const res = gameService.getCorrectPositionsAndColors(guess, board)
 
     expect(res).toEqual({ correctColors: 1, correctPositions: 0, guess })
+  })
 
-    guess = [2, 2, 2, 2]
-    board = [5, 2, 2, 5]
-    res = gameService.getCorrectPositionsAndColors(guess, board)
+  it('validates a guess with multiple correct colors/positions but incorrect colors in other positions', () => {
+    const guess = [2, 2, 2, 2]
+    const board = [5, 2, 2, 5]
+    const res = gameService.getCorrectPositionsAndColors(guess, board)
 
     expect(res).toEqual({ correctColors: 0, correctPositions: 2, guess })
+  })
 
-    guess = [1, 2, 3, 4]
-    board = [4, 3, 2, 1]
-    res = gameService.getCorrectPositionsAndColors(guess, board)
+  it('validates a guess with the all correct colors, but in all the wrong positions', () => {
+    const guess = [1, 2, 3, 4]
+    const board = [4, 3, 2, 1]
+    const res = gameService.getCorrectPositionsAndColors(guess, board)
 
     expect(res).toEqual({ correctColors: 4, correctPositions: 0, guess })
+  })
+
+  it('validates a guess with the all correct colors/positions, except one incorrect color that matches another position', () => {
+    const guess = [6, 2, 1, 5]
+    const board = [6, 2, 6, 5]
+    const res = gameService.getCorrectPositionsAndColors(guess, board)
+
+    expect(res).toEqual({ correctColors: 0, correctPositions: 3, guess })
   })
 
   it('returns the correct amount of colors guessed', () => {

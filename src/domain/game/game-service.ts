@@ -22,8 +22,13 @@ class GameService {
   async createGame(userId: string, difficulty: string): Promise<GameEntity> {
     await userService.getUser(userId)
     this.validator.validateDifficulty(difficulty)
-    const guesses = this.getNumberOfGuessesForDifficulty(difficulty)
-    const numbers = await numberGeneratorService.getRandomNumbers()
+    const options = this.getGameOptions(difficulty)
+    const [guesses, positions] = options
+    const numbers = await numberGeneratorService.getRandomNumbers(
+      positions,
+      0,
+      7
+    )
     return await this.repository.createGame(userId, numbers, guesses)
   }
 
@@ -56,16 +61,28 @@ class GameService {
     })
   }
 
-  getNumberOfGuessesForDifficulty(difficulty: string) {
+  getGameOptions(difficulty: string): number[] {
     const DEFAULT_TURNS = 10
-    if (!difficulty) return DEFAULT_TURNS
-    const guessMap = new Map([
-      ['easy', 12],
-      ['normal', 10],
-      ['hard', 8],
-      ['test', 3],
+    const DEFAULT_POSITIONS = 4
+    if (difficulty === undefined) {
+      return [DEFAULT_TURNS, DEFAULT_POSITIONS]
+    }
+
+    /* First number in array is number of guesses, second number
+     * is number of board positions.
+     * TODO: Refactor into clearer data structure. */
+    const options = new Map([
+      ['easy', [12, 3]],
+      ['normal', [10, 4]],
+      ['hard', [8, 5]],
+      ['test', [3, 3]],
     ])
-    return guessMap.get(difficulty.toLowerCase()) || DEFAULT_TURNS
+    return (
+      options.get(difficulty.toLowerCase()) || [
+        DEFAULT_TURNS,
+        DEFAULT_POSITIONS,
+      ]
+    )
   }
 
   validateVictoryConditions(

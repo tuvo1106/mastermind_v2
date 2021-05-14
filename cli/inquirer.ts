@@ -68,19 +68,31 @@ export class Inquirer {
     ])
   }
 
-  getPlayerGuess(): Promise<GuessInputs> {
-    const questionArray = ['1', '2', '3', '4'].map((num) => {
+  getPlayerGuess(numberOfPrompts: number = 4): Promise<GuessInputs> {
+    const arr = []
+    for (let i = 1; i < numberOfPrompts + 1; i++) {
+      arr.push(i.toString())
+    }
+    const questionArray = arr.map((num) => {
       return {
         type: 'input',
         name: `input-${num}`,
         message: `Enter in your guess for position ${num}:`,
         validate: (value: any) => {
-          if (isNaN(value) || !!(value % 1)) {
+          value = value.trim()
+          if (value === '') {
+            return 'The guess cannot be empty.'
+          }
+          if (isNaN(value)) {
             return 'Please enter in a number.'
+          }
+          if (!Number.isInteger(+value)) {
+            return 'Please enter in an integer.'
           }
           if (+value < 0 || +value > 7) {
             return 'Please enter in a number between 0 and 7.'
           }
+
           return true
         },
       }
